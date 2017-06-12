@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Document</title>
+		<style>
+		*{margin: 0;padding: 0;}
+			canvas {
+				background-color: black;
+				animation: 2s kk ease-in-out infinite alternate;
+				margin: 0 auto;
+			}
+			@keyframes kk{
+				from{background-color: #000000;}
+				to{background-color:white;}
+			}
+		</style>
+	</head>
+
+	<body>
+		<canvas id="canvas" width="1300" height="800"></canvas>
+	</body>
+	<script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
+	<script>
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		var arr = ["李白", "安其拉", "典韦", "韩信", "后裔", "程咬金", "荆轲", "starek", "宫本", "孙悟空"]
+        var color = ['#ffcc00', '#ff9900', '#993366', '#66cccc', '#ff99cc',];
+
+		function Ball() {
+			this.r = _.random(20, 50);
+			this.x = _.random(0, canvas.width - this.r);
+			this.y = _.random(0, canvas.height - this.r);
+            this.texr=_.sample(arr);
+            this.color=_.sample(color);
+			// 自己变化的方向
+
+			this.dx = _.random(-2, 2);
+			this.dy = _.random(-2, 2);
+             if(this.dx==0||this.dy==0){
+             	this.dx=1;
+             	this.dy=1;
+             	
+             }
+			// 和自己相关联的小球 从盒子里面随机拿出3 到6个小球
+			this.friend = _.sample(ballArr, _.random(2, 10));
+
+			ballArr.push(this);
+		}
+
+		Ball.prototype.update = function() {
+			this.x += this.dx;
+			this.y += this.dy;
+
+			// 检测碰边反弹
+			if (this.x < this.r || this.x >= canvas.width - this.r) {
+				this.dx = -this.dx;
+			} else if (this.y < this.r || this.y >= canvas.height - this.r) {
+				this.dy = -this.dy;
+			}
+
+		}
+
+		
+
+		Ball.prototype.render = function() {
+			// 画一个球
+
+			//beginPath() 方法开始一条路径，或重置当前的路径。
+			ctx.beginPath();
+
+			//画一个圆弧 1.圆的中心的 x 坐标 2.圆的中心的 y 坐标 3.圆的半径 4.起始角，以弧度计（弧的圆形的三点钟位置是 0 度）
+			//5.结束角，以弧度计 6.可选。规定应该逆时针还是顺时针绘图。False = 顺时针，true = 逆时针。
+
+			ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+			ctx.fill();
+			ctx.closePath();
+
+			ctx.fillStyle = 'black';
+
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+
+			ctx.fillText(this.texr, this.x, this.y);
+			ctx.fillStyle = this.color;
+
+			// 画线
+			ctx.lineWidth = "0.2";
+			ctx.strokeStyle = _.sample(color);
+			var self = this;
+
+			_.each(this.friend, function(i) {
+
+            
+				//beginPath() 方法开始一条路径，或重置当前的路径。
+				ctx.beginPath();
+				ctx.moveTo(self.x, self.y);
+				ctx.lineTo(i.x, i.y);
+				//把所有的点连起来
+				ctx.closePath();
+				// 绘制出通过 moveTo() 和 lineTo() 方法定义的路径。默认颜色是黑色。
+				ctx.stroke();
+			})
+
+		}
+
+		var ballArr = [];
+		for (var i = 0; i < 10; i++) {
+			new Ball();
+		}
+
+		setInterval(function() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			_.each(ballArr, function(i) {
+				i.update();
+				i.render();
+			})
+		}, 10)
+	</script>
+
+</html>

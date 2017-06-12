@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    *{margin: 0;padding:0;}
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="1000" height="700"></canvas>
+
+</body>
+<script>
+  
+
+    var canvas=document.getElementById("canvas");
+    var clock=canvas.getContext('2d');
+   
+   
+
+    function arr(){
+    	clock.clearRect(0,0,1000,700); 
+        
+     var time=new Date();
+	var miao=time.getSeconds()*6;
+	var fen=(time.getMinutes() + time.getSeconds()/60) / 60 * 360;
+    var  shi= (time.getHours() + time.getMinutes()/60) / 12 * 360;
+	   clock.beginPath();   
+      clock.lineWidth=10;       
+      clock.arc(300,250,200,0,2*Math.PI);
+      clock.stroke();
+      clock.closePath();
+      //时
+      	for(var i=12;i>0;i--){
+            //保持当前环境的状态
+			clock.save();
+            //中心点
+			clock.translate(300,250);
+            //rotate旋转当前的绘图
+			clock.rotate(i*30*Math.PI/180);
+			clock.lineWidth=5;
+			clock.beginPath();
+			clock.moveTo(0,-185);
+			clock.lineTo(0,-165);
+        clock.closePath();
+            
+			clock.stroke();
+			clock.fill();
+			clock.restore();
+            
+            
+		}
+       //分
+       for(var i=60;i>0;i--){
+           clock.save();
+           clock.translate(300,250);
+	    	clock.rotate(i*6*Math.PI/180);        
+           clock.lineWidth=3;
+           clock.beginPath();
+           clock.moveTo(0,-185);
+           clock.lineTo(0,-175);
+           clock.stroke();
+		   clock.restore();
+           
+           
+       }
+       //时
+        clock.save();
+		clock.translate(300,250);
+		clock.lineWidth=5;
+		clock.strokeStyle='black';      
+		clock.rotate(shi*Math.PI/180);
+		clock.beginPath();
+		clock.moveTo(0,-90);
+		clock.lineTo(0,20);
+        clock.closePath();
+		clock.stroke();
+		clock.restore();
+            
+   
+        
+        
+        
+        
+        //分针
+
+    	clock.save();
+		clock.translate(300,250);
+		clock.lineWidth=3;
+		clock.strokeStyle='#ff8c00';      
+		clock.rotate(fen*Math.PI/180);
+		clock.beginPath();
+		clock.moveTo(0,-130);
+		clock.lineTo(0,20);
+        clock.closePath();
+        
+		clock.stroke();
+		clock.restore();
+        
+           //秒针
+    	clock.save();
+		clock.translate(300,250);
+		clock.lineWidth=2;
+		clock.strokeStyle='#f00';
+		clock.rotate(miao*Math.PI/180);
+		clock.beginPath();
+		clock.moveTo(0,-170);
+		clock.lineTo(0,20);
+		clock.stroke();
+		clock.restore();
+       
+
+    //   中心点
+           clock.beginPath();       
+          clock.arc(300,250,10,0,2*Math.PI);          
+            clock.lineWidth=2;
+            clock.fill();
+               
+    }
+ arr()
+setInterval(arr,1000);
+</script>
+</html>
